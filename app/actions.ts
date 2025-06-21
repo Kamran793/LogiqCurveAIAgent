@@ -3,8 +3,6 @@ import { redirect } from "next/navigation";
 import { encodedRedirect } from "@/utils/redirect";
 import { revalidatePath } from "next/cache";
 
-"use server";
-
 export const signInAction = async (formData: FormData) => {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
