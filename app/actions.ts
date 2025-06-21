@@ -1,31 +1,8 @@
-"use server";
-
 import { createSupabaseClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { encodedRedirect } from "@/utils/redirect";
 import { revalidatePath } from "next/cache";
-import { createUpdateClient } from "@/utils/update/server";
-import Anthropic from '@anthropic-ai/sdk';
-import { SupabaseClient } from "@supabase/supabase-js";
-// Assuming MessageParam might not be found by linter yet
-// import { MessageParam } from '@anthropic-ai/sdk/resources/messages'; 
 
-export const signInAction = async (formData: FormData) => {
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
-  const client = await createSupabaseClient();
-
-  const { data, error } = await client.auth.signInWithPassword({
-    email,
-    password,
-  });
-
-  if (error) {
-    // Provide a more user-friendly error message
-    let errorMessage = error.message;
-    
-    if (error.message.includes("Invalid login credentials")) {
-      err
 export const signInAction = async (formData: FormData) => {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
