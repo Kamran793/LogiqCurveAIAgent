@@ -25,7 +25,58 @@ export const signInAction = async (formData: FormData) => {
     let errorMessage = error.message;
     
     if (error.message.includes("Invalid login credentials")) {
-      errorMessage = "We couldn't find an account with these credentials. Please double-check your email and password.";
+      err
+// Fixed signInAction function with improved error handling and response
+export const signInAction = async (formData: FormData) => {
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+  const client = await createSupabaseClient();
+
+  try {
+    // Sign in with Supabase
+    const { data, error } = await client.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      // Handle specific errors and provide a more user-friendly message
+      let errorMessage = error.message;
+
+      if (error.message.includes("Invalid login credentials")) {
+        errorMessage = "Account not found. Please check your email or sign up.";
+      } else if (error.message.includes("Email not confirmed")) {
+        errorMessage = "Your email hasn't been verified yet. Please check your inbox.";
+      }
+
+      // Return the error message and redirect to sign-in page
+      return encodedRedirect("error", "/sign-in", errorMessage);
+    }
+
+    // Check if the email is confirmed
+    const user = data.user;
+    if (!user.email_confirmed_at) {
+      // Redirect to confirmation page if email is not confirmed
+      return encodedRedirect(
+        "success",
+        `/confirmation?email=${encodeURIComponent(email)}`,
+        "Please confirm your email to continue."
+      );
+    }
+
+    // Revalidate the root path to refresh the client state
+    revalidatePath("/");
+
+    // Redirect to home page if email is confirmed
+    return redirect("/");
+
+  } catch (err) {
+    // Catch any other unexpected errors
+    console.error("Sign-in error:", err);
+    return encodedRedirect("error", "/sign-in", "Something went wrong. Please try again.");
+  }
+};
+orMessage = "We couldn't find an account with these credentials. Please double-check your email and password.";
     } else if (error.message.includes("Email not confirmed")) {
       errorMessage = "Your email hasn't been verified yet. Please check your inbox.";
     }
