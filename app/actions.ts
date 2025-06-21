@@ -4,28 +4,7 @@ import { createSupabaseClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { encodedRedirect } from "@/utils/redirect";
 import { revalidatePath } from "next/cache";
-import { createUpdateClient } from "@/utils/update/server";
-import Anthropic from '@anthropic-ai/sdk';
-import { SupabaseClient } from "@supabase/supabase-js";
-// Assuming MessageParam might not be found by linter yet
-// import { MessageParam } from '@anthropic-ai/sdk/resources/messages'; 
 
-export const signInAction = async (formData: FormData) => {
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
-  const client = await createSupabaseClient();
-
-  const { data, error } = await client.auth.signInWithPassword({
-    email,
-    password,
-  });
-
-  if (error) {
-    // Provide a more user-friendly error message
-    let errorMessage = error.message;
-    
-    if (error.message.includes("Invalid login credentials")) {
-      err
 // Fixed signInAction function with improved error handling and response
 export const signInAction = async (formData: FormData) => {
   const email = formData.get("email") as string;
@@ -64,7 +43,7 @@ export const signInAction = async (formData: FormData) => {
       );
     }
 
-    // Revalidate the root path to refresh the client state
+    // Revalidate the root path to refresh client state
     revalidatePath("/");
 
     // Redirect to home page if email is confirmed
