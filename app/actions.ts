@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { encodedRedirect } from "@/utils/redirect";
 import { revalidatePath } from "next/cache";
 
+"use server";
+
 export const signInAction = async (formData: FormData) => {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
@@ -16,9 +18,9 @@ export const signInAction = async (formData: FormData) => {
     });
 
     if (error) {
-      // Handle specific errors and provide a more user-friendly message
       let errorMessage = error.message;
 
+      // Handle specific errors and provide a more user-friendly message
       if (error.message.includes("Invalid login credentials")) {
         errorMessage = "Account not found. Please check your email or sign up.";
       } else if (error.message.includes("Email not confirmed")) {
