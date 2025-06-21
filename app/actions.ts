@@ -2,6 +2,8 @@ import { createSupabaseClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { encodedRedirect } from "@/utils/redirect";
 import { revalidatePath } from "next/cache";
+import Anthropic from '@anthropic-ai/sdk';
+import type { SupabaseClient } from '@supabase/supabase-js';
 
 export const signInAction = async (formData: FormData) => {
   const email = formData.get("email") as string;
@@ -51,27 +53,6 @@ export const signInAction = async (formData: FormData) => {
     console.error("Sign-in error:", err);
     return encodedRedirect("error", "/sign-in", "Something went wrong. Please try again.");
   }
-};
-orMessage = "We couldn't find an account with these credentials. Please double-check your email and password.";
-    } else if (error.message.includes("Email not confirmed")) {
-      errorMessage = "Your email hasn't been verified yet. Please check your inbox.";
-    }
-    
-    return encodedRedirect("error", "/sign-in", errorMessage);
-  }
-
-  // Check if email is confirmed
-  const user = data.user;
-  if (!user.email_confirmed_at) {
-    // Email not confirmed, redirect to confirmation page
-    return encodedRedirect("success", `/confirmation?email=${encodeURIComponent(email)}`, "Please confirm your email to continue.");
-  }
-
-  // Revalidate the root path to refresh client state
-  revalidatePath("/");
-  
-  // Email confirmed, redirect to home page
-  return redirect("/");
 };
 
 export const signUpAction = async (formData: FormData) => {
