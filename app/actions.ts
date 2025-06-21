@@ -1,3 +1,5 @@
+"use server";
+
 import { createSupabaseClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { encodedRedirect } from "@/utils/redirect";
@@ -24,8 +26,6 @@ export const signInAction = async (formData: FormData) => {
     
     if (error.message.includes("Invalid login credentials")) {
       err
-"use server";
-
 export const signInAction = async (formData: FormData) => {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
